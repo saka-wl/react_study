@@ -12,7 +12,7 @@ const ChildComp: ForwardRefRenderFunction<ICustomInputRef, { name: string }> = (
         iptRef.current?.focus();
     }
 
-    useImperativeHandle(ref, () => {
+    useImperativeHandle<ICustomInputRef, ICustomInputRef>(ref, () => {
         return {
             focusFn
         }
