@@ -1,0 +1,11 @@
+// {
+//     "extends": [
+//         "eslint-config-react"
+//     ], //启用eslint-config-react中的规则
+//     "plugins": [
+//         "react"
+//     ],
+//     "rules": {
+//         // Add your specific rules here
+//     }
+// }

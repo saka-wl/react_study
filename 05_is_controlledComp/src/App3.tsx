@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 
 interface ICalendarControlled {
     value: Date;
@@ -37,12 +37,10 @@ function useMergeValue<T>(
         isFirstRender.current = false;
     }, [value]);
 
-    const setValue = (val: T) => {
-        if(val) {
-            setMergeValue(val);
-        }
+    const setValue = useCallback((val: T) => {
+        if(val) setMergeValue(val);
         onChange && onChange?.(val);
-    }
+    }, []);
     
     return [mergeValue, setValue] as const;
 }
@@ -54,6 +52,8 @@ function Calendar(props: ICalendar) {
         defaultValue: (props as ICalendarUnControlled).defaultValue,
         onChange: props.onChange
     }, new Date());
+
+    console.log('render Calendar');
     
     return <div>
         {mergeValue?.toLocaleDateString()}
@@ -63,20 +63,25 @@ function Calendar(props: ICalendar) {
     </div>
 }
 
+const CalendarMemo = memo(Calendar);
+
 export default function App() {
 
     const [value, setValue] = useState(new Date());
+    const [count, setCount] = useState(0);
     
     return (
         <>
             <p>Calendar Component</p>
             {/* 受控模式 */}
-            <Calendar value={value} onChange={(val) => { setValue(val) }} />
+            <CalendarMemo value={value} onChange={useCallback(() => (val: Date) => { setValue(val) }, [])} />
             <button onClick={() => setValue(new Date())}>changeValue</button>
             <button onClick={() => console.log(value)}>getValue</button>
             <hr />
             {/* 非受控模式 */}
-            <Calendar defaultValue={new Date()} onChange={(val) => { console.log('非受控模式,val: ' + val) }} />
+            {/* <CalendarMemo defaultValue={new Date()} onChange={(val) => { console.log('非受控模式,val: ' + val) }} /> */}
+
+            <button onClick={() => setCount(i => i + 1)}>{ count }</button>
         </>
     )
 }
